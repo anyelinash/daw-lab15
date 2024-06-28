@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const app = express();
 const port = 3000;
 
@@ -12,6 +13,13 @@ app.use(express.static('public'));
 
 // Middleware para procesar datos enviados en formularios
 app.use(express.urlencoded({ extended: true }));
+
+// Middleware para validar datos de entrada usando express-validator
+app.use([
+    body('columna1').trim().notEmpty().isLength({ max: 50 }).escape(),
+    body('columna2').isInt({ min: 1, max: 100 }),
+    body('columna3').trim().notEmpty().isLength({ max: 100 }).escape(),
+]);
 
 // Configuración de la conexión a MySQL
 const connection = mysql.createConnection({
@@ -58,15 +66,20 @@ app.get('/', (req, res) => {
     });
 });
 
-// Rutas para agregar, actualizar y eliminar alumnos y cursos (sin cambios)
-
+// Rutas para agregar, actualizar y eliminar alumnos
+// Ruta para agregar un nuevo alumno con validación de datos
 app.post('/agregar-alumno', (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { columna1, columna2, columna3, curso_id } = req.body;
     const consulta = 'INSERT INTO alumnos (columna1, columna2, columna3, curso_id) VALUES (?, ?, ?, ?)';
     connection.query(consulta, [columna1, columna2, columna3, curso_id], (error, results) => {
         if (error) {
             console.error('Error al insertar datos: ', error);
-            return;
+            return res.status(500).send('Error al insertar datos');
         }
         res.redirect('/');
     });
@@ -102,6 +115,7 @@ app.post('/eliminar-alumno/:id', (req, res) => {
     });
 });
 
+// Rutas para agregar, actualizar y eliminar cursos
 app.post('/agregar-curso', (req, res) => {
     const { nombre, descripcion } = req.body;
     const consulta = 'INSERT INTO cursos (nombre, descripcion) VALUES (?, ?)';
@@ -114,21 +128,29 @@ app.post('/agregar-curso', (req, res) => {
     });
 });
 
-app.get('/alumnos-por-curso/:curso_id', (req, res) => {
-    const { curso_id } = req.params;
-    const query = `
-        SELECT alumnos.id, alumnos.columna1, alumnos.columna2, alumnos.columna3, cursos.nombre as curso 
-        FROM alumnos 
-        LEFT JOIN cursos ON alumnos.curso_id = cursos.id
-        WHERE alumnos.curso_id = ?;
-    `;
-    connection.query(query, [curso_id], (error, resultados) => {
+app.post('/actualizar-curso/:id', (req, res) => {
+    const { id } = req.params;
+    const { nombre, descripcion } = req.body;
+
+    const consulta = 'UPDATE cursos SET nombre = ?, descripcion = ? WHERE id = ?';
+    connection.query(consulta, [nombre, descripcion, id], (error, results) => {
         if (error) {
-            console.error('Error al obtener los datos: ', error);
-            res.status(500).send('Error al obtener los datos');
+            console.error('Error al actualizar datos: ', error);
             return;
         }
-        res.render('alumnos-por-curso', { datos: resultados });
+        res.redirect('/');
+    });
+});
+
+app.post('/eliminar-curso/:id', (req, res) => {
+    const { id } = req.params;
+    const consulta = 'DELETE FROM cursos WHERE id = ?';
+    connection.query(consulta, [id], (error, results) => {
+        if (error) {
+            console.error('Error al eliminar datos: ', error);
+            return;
+        }
+        res.redirect('/');
     });
 });
 

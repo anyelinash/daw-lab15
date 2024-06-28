@@ -1,5 +1,6 @@
 body {
     background-color: #f8f9fa;
+    padding-top: 20px;
 }
 
 h1, h2 {
@@ -24,4 +25,27 @@ h1, h2 {
 
 .btn {
     margin-left: 5px;
+}
+
+/* Estilos para las tablas */
+.table-responsive {
+    margin-top: 20px; /* Ajuste el margen superior según sea necesario */
+}
+
+/* Estilos para los formularios de acción */
+.action-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px; /* Espacio entre cada formulario */
+}
+
+.action-form input,
+.action-form select,
+.action-form textarea {
+    margin-bottom: 5px; /* Espacio entre cada campo */
+}
+
+.action-form button {
+    margin-bottom: 5px; /* Espacio entre el botón y el siguiente formulario */
 }
