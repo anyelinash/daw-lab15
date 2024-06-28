@@ -1,0 +1,65 @@
+doctype html
+html
+    head
+        title Mi Aplicación
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+        link(rel="stylesheet" href="/styles.css")
+    body
+        .container
+            h1.mt-4.mb-4 Mi Aplicación
+            h2 Alumnos
+            ul.list-group.mb-4
+                each alumno in alumnos
+                    li.list-group-item.d-flex.justify-content-between.align-items-center
+                        span
+                            | #{alumno.columna1} - #{alumno.curso ? alumno.curso : 'Sin curso'}
+                        .btn-group
+                            form(action=`/eliminar-alumno/${alumno.id}` method="POST" class="mr-2")
+                                button(type="submit" class="btn btn-danger btn-sm") Eliminar
+                            form(action=`/actualizar-alumno/${alumno.id}` method="POST")
+                                input(type="text" name="columna1" value=alumno.columna1 required class="form-control mr-2 d-inline-block w-auto")
+                                input(type="number" name="columna2" value=alumno.columna2 required class="form-control mr-2 d-inline-block w-auto")
+                                input(type="text" name="columna3" value=alumno.columna3 required class="form-control mr-2 d-inline-block w-auto")
+                                select(name="curso_id" class="form-control mr-2 d-inline-block w-auto")
+                                    option(value="") Sin curso
+                                    each curso in cursos
+                                        option(value=curso.id selected=curso.id == alumno.curso_id)= curso.nombre
+                                button(type="submit" class="btn btn-primary btn-sm") Actualizar
+
+            h2 Agregar nuevo alumno
+            form(action="/agregar-alumno" method="POST" class="mb-4")
+                .form-group
+                    input(type="text" name="columna1" placeholder="Columna 1" required class="form-control")
+                .form-group
+                    input(type="number" name="columna2" placeholder="Columna 2" required class="form-control")
+                .form-group
+                    input(type="text" name="columna3" placeholder="Columna 3" required class="form-control")
+                .form-group
+                    select(name="curso_id" class="form-control")
+                        option(value="") Sin curso
+                        each curso in cursos
+                            option(value=curso.id)= curso.nombre
+                button(type="submit" class="btn btn-success") Agregar
+
+            h2 Agregar nuevo curso
+            form(action="/agregar-curso" method="POST" class="mb-4")
+                .form-group
+                    input(type="text" name="nombre" placeholder="Nombre del curso" required class="form-control")
+                .form-group
+                    textarea(name="descripcion" placeholder="Descripción del curso" required class="form-control")
+                button(type="submit" class="btn btn-success") Agregar
+
+            h2 Cursos
+            table.table.table-striped.table-bordered
+                thead.thead-dark
+                    tr
+                        th Nombre
+                        th Descripción
+                tbody
+                    each curso in cursos
+                        tr
+                            td= curso.nombre
+                            td= curso.descripcion
+        script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
+        script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")

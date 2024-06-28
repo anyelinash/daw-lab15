@@ -1,0 +1,27 @@
+body {
+    background-color: #f8f9fa;
+}
+
+h1, h2 {
+    color: #343a40;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-group-item .btn-group {
+    display: flex;
+    align-items: center;
+}
+
+.form-control {
+    display: inline-block;
+    width: auto;
+}
+
+.btn {
+    margin-left: 5px;
+}
