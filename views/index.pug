@@ -69,12 +69,12 @@ html
                                 td= curso.nombre
                                 td= curso.descripcion
                                 td.text-center.align-middle
-                                    form(action=`/eliminar-curso/${curso.id}` method="POST" class="action-form")
-                                        button(type="submit" class="btn btn-danger btn-sm") Eliminar
                                     form(action=`/actualizar-curso/${curso.id}` method="POST" class="action-form")
                                         input(type="text" name="nombre" value=curso.nombre required class="form-control" placeholder="Nombre del curso")
                                         textarea(name="descripcion" required class="form-control" placeholder="Descripción del curso")= curso.descripcion
                                         button(type="submit" class="btn btn-primary btn-sm") Actualizar
+                                    form(action=`/eliminar-curso/${curso.id}` method="POST" class="action-form")
+                                        button(type="submit" class="btn btn-danger btn-sm") Eliminar
 
 
             // Sección de Agregar nuevo curso
